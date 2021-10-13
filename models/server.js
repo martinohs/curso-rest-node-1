@@ -15,7 +15,7 @@ class Server {
         this.routes();
     }
 
-    //*funciones que siempre se va a ejecutar al iniciar el servidor
+    //* middlewares son funciones que siempre se va a ejecutar al iniciar el servidor
     middlewares() {
         // CORS
         this.app.use(cors());
