@@ -1,9 +1,15 @@
 const { Router } = require('express');
 const { check } = require('express-validator');
+
 const { validarCampos } = require('../middlewares/validar-campos');
+const { validarJWT } = require('../middlewares/validar-jwt');
+const { esAdminRole, tieneRol } = require('../middlewares/validar-roles');
+
 const { usuariosGet, usuariosPut, usuariosPost, usuariosDelete, usuariosPatch } = require('../controllers/usuarios-controller');
+
 const Role = require('../models/role');
 const router = Router();
+
 const { esRoleValido, existeEmail, existeUsuario } = require('../helpers/db-validators');
 
 // GET OBTIENE
@@ -40,6 +46,9 @@ router.post('/', [
 
 // DELETE BORRA
 router.delete('/:id', [
+    validarJWT,
+    // esAdminRole, --> fuerzo a que sea administrador
+    tieneRol('USER_ROLE', 'VENTAS_ROLE', 'ADMIN_ROLE'),
     check('id', 'No es un id valido').isMongoId(),
     check('id').custom(existeUsuario),
     validarCampos

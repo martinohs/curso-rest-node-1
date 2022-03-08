@@ -1,9 +1,10 @@
-const { response } = require('express');
+const { response, request } = require('express');
 const bcryptjs = require('bcryptjs');
-const Usuario = require('../models/usuario');
 const { validationResult } = require('express-validator');
 
-const usuariosGet = async(req, res = response) => {
+const Usuario = require('../models/usuario');
+
+const usuariosGet = async(req = request, res = response) => {
 
     //* Con esto obtengo los parametros de una query que se pida por path : 
     // ejemplo -> //? /usuarios?q=hola&nombre=martino&apikey=1231231
@@ -60,6 +61,7 @@ const usuariosPut = async(req, res = response) => {
     res.json(usuario);
 };
 
+//CREA USUARIOS
 const usuariosPost = async(req, res = response) => {
 
     //* REQ.body es el contenido del request
@@ -82,10 +84,16 @@ const usuariosPost = async(req, res = response) => {
 
 const usuariosDelete = async(req, res = response) => {
     const { id } = req.params;
+
+    const usuarioAutenticado = req.usuario;
+
     const usuario = await Usuario.findByIdAndUpdate(id, { estado: false });
 
+
     res.json({
-        msg: `DELETE METHOD API - CONTROLLER ${id}`
+        msg: `DELETE METHOD API - CONTROLLER ${id}`,
+        usuario,
+        usuarioAutenticado
     });
 
 };

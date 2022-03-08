@@ -1,5 +1,6 @@
 const { Schema, model } = require('mongoose');
 
+
 //* MODELO DE USUARIO
 const UsuarioSchema = Schema({
     nombre: {
@@ -38,7 +39,8 @@ const UsuarioSchema = Schema({
 UsuarioSchema.methods.toJSON = function() {
     //Lo que hago es "sacar" la contraseña y la version del objeto usuario, con esto no muestro dicha informacion
     //sin embargo tanto la version como la contraseña siguen siendo parte del usuario
-    const { __v, password, ...unUsuario } = this.toObject();
+    const { __v, password, _id, ...unUsuario } = this.toObject();
+    unUsuario.uid = _id;
     return unUsuario;
 };
 
